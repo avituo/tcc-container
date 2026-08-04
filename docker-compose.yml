@@ -1,0 +1,115 @@
+version: '3.8'
+
+x-xdebug-env: &xdebug-env
+  XDEBUG_MODE: "debug"
+  XDEBUG_CONFIG: "client_host=host.docker.internal client_port=9003 start_with_request=yes"
+
+services:
+  laravel-base:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: base-laravel:8.4
+
+  tcc-frontend:
+    build:
+      context: ../tcc-frontend-microservices
+      dockerfile: Dockerfile
+    container_name: tcc-frontend-microservices
+    ports:
+      - "5173:5173"
+    volumes:
+      - ../tcc-frontend-microservices:/app
+      - /app/node_modules
+    networks:
+      - microservices-net
+    depends_on:
+      - api-gateway-core
+
+  api-gateway-core:
+    build:
+      context: ../api-gateway-core
+      dockerfile: Dockerfile
+    container_name: api-gateway-core
+    ports:
+      - "8080:8080"
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ISSUER: ${JWT_ISSUER:-http://tcc-auth-service:8003}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-tcc-api-gateway}
+    networks:
+      - microservices-net
+    depends_on:
+      - tcc-auth-service
+      - tcc-product-service
+      - tcc-order-service
+
+  tcc-auth-service:
+    build:
+      context: ../tcc-auth-service
+      dockerfile: Dockerfile
+    container_name: tcc-auth-service
+    ports:
+      - "8003:8003"
+    environment:
+      <<: *xdebug-env
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ISSUER: ${JWT_ISSUER:-http://tcc-auth-service:8003}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-tcc-api-gateway}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_AUTH_NAME}
+      DB_USERNAME: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - microservices-net
+    depends_on:
+      - laravel-base
+
+  tcc-product-service:
+    build:
+      context: ../tcc-product-service
+      dockerfile: Dockerfile
+    container_name: tcc-product-service
+    ports:
+      - "8001:8001"
+    environment:
+      <<: *xdebug-env
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_PRODUCT_NAME}
+      DB_USERNAME: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - microservices-net
+    depends_on:
+      - laravel-base
+
+  tcc-order-service:
+    build:
+      context: ../tcc-order-service
+      dockerfile: Dockerfile
+    container_name: tcc-order-service
+    ports:
+      - "8002:8002"
+    environment:
+      <<: *xdebug-env
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_ORDER_NAME}
+      DB_USERNAME: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - microservices-net
+    depends_on:
+      - laravel-base
+
+networks:
+  microservices-net:
+    driver: bridge
