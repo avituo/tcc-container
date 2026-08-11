@@ -1,0 +1,150 @@
+x-laravel-environment: &laravel-environment
+  APP_ENV: production
+  APP_KEY: ${TCC_LARAVEL_APP_KEY:?Set TCC_LARAVEL_APP_KEY in .env.experiment}
+  APP_DEBUG: "false"
+  LOG_CHANNEL: stderr
+  LOG_LEVEL: warning
+  DB_CONNECTION: mysql
+  DB_HOST: mysql
+  DB_PORT: 3306
+  DB_USERNAME: tcc
+  DB_PASSWORD: ${TCC_DB_PASSWORD:?Set TCC_DB_PASSWORD in .env.experiment}
+  CACHE_STORE: array
+  SESSION_DRIVER: array
+  QUEUE_CONNECTION: sync
+  BCRYPT_ROUNDS: 12
+  XDEBUG_MODE: "off"
+  TZ: UTC
+
+services:
+  experiment-base:
+    profiles: ["build-only"]
+    build:
+      context: .
+      dockerfile: Dockerfile.experiment-base
+    image: tcc-laravel-experiment:php8.4.19
+
+  mysql:
+    image: mysql:8.4.8@sha256:2952e3be7807f06fc18de50b3ea1a632d5c70d63482ff7d7376fe3aa8999babf
+    environment:
+      MYSQL_ROOT_PASSWORD: ${TCC_DB_ROOT_PASSWORD:?Set TCC_DB_ROOT_PASSWORD in .env.experiment}
+      MYSQL_DATABASE: tcc_auth_experiment
+      MYSQL_USER: tcc
+      MYSQL_PASSWORD: ${TCC_DB_PASSWORD:?Set TCC_DB_PASSWORD in .env.experiment}
+      TZ: UTC
+    command: ["--defaults-extra-file=/etc/mysql/conf.d/zz-tcc-experiment.cnf"]
+    volumes:
+      - microservices-experiment-db:/var/lib/mysql
+      - ./docker/mysql/experiment.cnf:/etc/mysql/conf.d/zz-tcc-experiment.cnf:ro
+      - ./docker/mysql/init-microservices.sql:/docker-entrypoint-initdb.d/01-microservice-databases.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 2s
+      timeout: 2s
+      retries: 60
+    mem_limit: 1g
+    networks:
+      - experiment
+
+  auth:
+    build:
+      context: ../tcc-auth-service
+      dockerfile: Dockerfile.experiment
+    image: tcc-auth-experiment:php8.4.19
+    environment:
+      <<: *laravel-environment
+      DB_DATABASE: tcc_auth_experiment
+      JWT_SECRET: ${TCC_JWT_SECRET:?Set TCC_JWT_SECRET in .env.experiment}
+      JWT_ISSUER: http://auth:8003
+      JWT_AUDIENCE: tcc-api-gateway
+      JWT_TTL_MINUTES: 15
+    depends_on:
+      mysql:
+        condition: service_healthy
+    init: true
+    mem_limit: 1g
+    networks:
+      experiment:
+        aliases:
+          - tcc-auth-service
+
+  product:
+    build:
+      context: ../tcc-product-service
+      dockerfile: Dockerfile.experiment
+    image: tcc-product-experiment:php8.4.19
+    environment:
+      <<: *laravel-environment
+      DB_DATABASE: tcc_products_experiment
+      GATEWAY_INTERNAL_KEY: ${TCC_GATEWAY_INTERNAL_KEY:?Set TCC_GATEWAY_INTERNAL_KEY in .env.experiment}
+      TCC_EXPERIMENT_DISABLE_RATE_LIMITING: "true"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    init: true
+    mem_limit: 1g
+    networks:
+      experiment:
+        aliases:
+          - tcc-product-service
+
+  order:
+    build:
+      context: ../tcc-order-service
+      dockerfile: Dockerfile.experiment
+    image: tcc-order-experiment:php8.4.19
+    environment:
+      <<: *laravel-environment
+      DB_DATABASE: tcc_orders_experiment
+      GATEWAY_INTERNAL_KEY: ${TCC_GATEWAY_INTERNAL_KEY:?Set TCC_GATEWAY_INTERNAL_KEY in .env.experiment}
+      PRODUCT_SERVICE_URL: http://product:8001
+      PRODUCT_SERVICE_CONNECT_TIMEOUT: 2
+      PRODUCT_SERVICE_TIMEOUT: 5
+      PRODUCT_RESERVATION_TTL_MINUTES: 15
+      TCC_EXPERIMENT_DISABLE_RATE_LIMITING: "true"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      product:
+        condition: service_started
+    init: true
+    mem_limit: 1g
+    networks:
+      experiment:
+        aliases:
+          - tcc-order-service
+
+  gateway:
+    build:
+      context: ../api-gateway-core
+      dockerfile: Dockerfile.experiment
+    image: tcc-gateway-experiment:java21
+    environment:
+      SERVER_PORT: 8080
+      JWT_SECRET: ${TCC_JWT_SECRET:?Set TCC_JWT_SECRET in .env.experiment}
+      JWT_ISSUER: http://auth:8003
+      JWT_AUDIENCE: tcc-api-gateway
+      GATEWAY_INTERNAL_KEY: ${TCC_GATEWAY_INTERNAL_KEY:?Set TCC_GATEWAY_INTERNAL_KEY in .env.experiment}
+      LOGGING_LEVEL_ROOT: WARN
+      JAVA_TOOL_OPTIONS: -Xms256m -Xmx256m -XX:+UseG1GC -Duser.timezone=UTC
+      TZ: UTC
+    ports:
+      - "18080:8080"
+    depends_on:
+      auth:
+        condition: service_started
+      product:
+        condition: service_started
+      order:
+        condition: service_started
+    init: true
+    mem_limit: 512m
+    networks:
+      - experiment
+
+volumes:
+  microservices-experiment-db:
+
+networks:
+  experiment:
+    driver: bridge

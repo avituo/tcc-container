@@ -1,0 +1,58 @@
+Container tcc-monolith-experiment-mysql-1  Running
+Container tcc-monolith-experiment-monolith-1  Running
+Container tcc-monolith-experiment-mysql-1  Waiting
+Container tcc-monolith-experiment-mysql-1  Healthy
+Reset target: tcc_monolith_experiment
+
+   INFO  Clearing cached bootstrap files.  
+
+  config ......................................................... 5.38ms DONE
+  cache ......................................................... 15.44ms DONE
+  compiled ....................................................... 0.98ms DONE
+  events ......................................................... 0.91ms DONE
+  routes ......................................................... 0.76ms DONE
+  views .......................................................... 8.55ms DONE
+
+
+  Dropping all tables .......................................... 133.78ms DONE
+
+   INFO  Preparing database.  
+
+  Creating migration table ...................................... 22.06ms DONE
+
+   INFO  Running migrations.  
+
+  0001_01_01_000000_create_users_table ......................... 114.14ms DONE
+  0001_01_01_000001_create_cache_table .......................... 62.19ms DONE
+  0001_01_01_000002_create_jobs_table ........................... 72.21ms DONE
+  2024_01_01_000000_create_passkeys_table ....................... 93.23ms DONE
+  2025_08_14_170933_add_two_factor_columns_to_users_table ...... 150.22ms DONE
+  2026_06_07_225747_create_products_table ....................... 45.63ms DONE
+  2026_06_07_230312_create_orders_table ........................ 100.14ms DONE
+  2026_06_10_030037_create_order_product_table ....................... 1s DONE
+  2026_07_22_183123_add_snapshots_and_idempotency_to_orders .... 262.31ms DONE
+  2026_07_22_183124_add_snapshots_to_order_product ............. 321.20ms DONE
+  2026_07_22_184119_align_commerce_schema_for_equivalence ...... 226.37ms DONE
+  2026_07_29_140158_add_commerce_api_parity_columns ............ 182.96ms DONE
+
+
+   INFO  Seeding database.  
+
+
+   INFO  Configuration cached successfully.  
+
+
+   INFO  Routes cached successfully.  
+
+database=tcc_monolith_experiment
+user_count=100
+product_count=1000
+order_count=5000
+order_item_count=10000
+status_distribution={"pending":2500,"paid":1500,"cancelled":1000}
+orders_per_user_min=50
+orders_per_user_max=50
+logical_fingerprint=44cb257fd1b0fbd23dde712b5250ca3d002eded4c2a9e911c74c80c94eb073a7
+order_mapping_1=1
+order_mapping_5000=5000
+benchmark_dataset=VALID

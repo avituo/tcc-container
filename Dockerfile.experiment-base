@@ -1,0 +1,11 @@
+FROM php:8.4.19-cli-bookworm@sha256:3ddb5a91b44a1c922538576d73a6e808fb2438d9d2d65b1fc3ffd55619fac2e3
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git libzip-dev unzip \
+    && docker-php-ext-install -j"$(nproc)" opcache pdo_mysql zip \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:2.9.2@sha256:c4f6b39889c396b86fd3603c047bb73929f05fcaa887e78f172d366e0891062b /usr/bin/composer /usr/bin/composer
+COPY docker/php/experiment.ini /usr/local/etc/php/conf.d/zz-tcc-experiment.ini
+
+WORKDIR /var/www

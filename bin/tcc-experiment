@@ -1,0 +1,165 @@
+#!/bin/sh
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PROJECT_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+ENV_FILE="$PROJECT_ROOT/.env.experiment"
+COMPOSE_FILE="$PROJECT_ROOT/docker-compose.experiment.yml"
+COMPOSE_PROJECT=tcc-microservices-experiment
+
+compose()
+{
+    docker compose --env-file "$ENV_FILE" --project-name "$COMPOSE_PROJECT" --file "$COMPOSE_FILE" "$@"
+}
+
+initialize_environment()
+{
+    if [ -f "$ENV_FILE" ]; then
+        printf '%s\n' "Experiment environment already exists: $ENV_FILE"
+        return
+    fi
+
+    umask 077
+    app_key="base64:$(openssl rand -base64 32 | tr -d '\n')"
+    db_password=$(openssl rand -hex 24)
+    root_password=$(openssl rand -hex 24)
+    jwt_secret=$(openssl rand -hex 48)
+    gateway_key=$(openssl rand -hex 48)
+
+    {
+        printf 'TCC_LARAVEL_APP_KEY=%s\n' "$app_key"
+        printf 'TCC_DB_PASSWORD=%s\n' "$db_password"
+        printf 'TCC_DB_ROOT_PASSWORD=%s\n' "$root_password"
+        printf 'TCC_JWT_SECRET=%s\n' "$jwt_secret"
+        printf 'TCC_GATEWAY_INTERNAL_KEY=%s\n' "$gateway_key"
+    } > "$ENV_FILE"
+
+    printf '%s\n' "Created protected experiment environment: $ENV_FILE"
+}
+
+require_environment()
+{
+    if [ ! -f "$ENV_FILE" ]; then
+        printf '%s\n' "Missing $ENV_FILE. Run: $0 init" >&2
+        exit 1
+    fi
+}
+
+wait_for_http()
+{
+    url=$1
+    attempts=0
+
+    until curl --fail --silent --show-error "$url" >/dev/null 2>&1; do
+        attempts=$((attempts + 1))
+        if [ "$attempts" -ge 90 ]; then
+            printf 'Timed out waiting for %s\n' "$url" >&2
+            return 1
+        fi
+        sleep 1
+    done
+}
+
+start_stack()
+{
+    require_environment
+    compose --profile build-only build experiment-base
+    compose build auth product order gateway
+    compose up --detach mysql auth product order gateway
+    wait_for_http http://localhost:18080/actuator/health
+
+    for service in auth product order; do
+        compose exec -T "$service" php -v
+        if compose exec -T "$service" php -m | grep -qi xdebug; then
+            printf 'Xdebug must not be loaded in %s.\n' "$service" >&2
+            exit 1
+        fi
+        compose exec -T "$service" php artisan about --only=environment
+    done
+
+    compose exec -T gateway java -version
+    compose exec -T mysql mysql --version
+    printf '%s\n' 'Microservices gateway experiment URL: http://localhost:18080'
+}
+
+reset_dataset()
+{
+    require_environment
+    compose up --detach mysql auth product order gateway
+    printf '%s\n' 'Reset targets: tcc_auth_experiment, tcc_products_experiment, tcc_orders_experiment'
+
+    for service in auth product order; do
+        compose exec -T "$service" php artisan optimize:clear
+        compose exec -T "$service" php artisan migrate:fresh --seed --force
+        compose exec -T "$service" php artisan config:cache
+        compose exec -T "$service" php artisan route:cache
+    done
+
+    validate_dataset
+}
+
+validate_dataset()
+{
+    require_environment
+    compose exec -T auth php artisan experiment:dataset:validate
+    compose exec -T product php artisan experiment:dataset:validate
+    compose exec -T order php artisan experiment:dataset:validate
+}
+
+prepare_authentication()
+{
+    require_environment
+    output_directory=${1:-"$PROJECT_ROOT/.experiment-auth"}
+    mkdir -p "$output_directory"
+    chmod 700 "$output_directory"
+
+    token_file="$output_directory/microservices.jwt"
+    token_response=$(curl --fail --silent --show-error \
+        --header 'Accept: application/json' \
+        --header 'Content-Type: application/json' \
+        --data '{"email":"benchmark-user-001@example.test","password":"benchmark-password"}' \
+        http://localhost:18080/api/v1/auth/token)
+    printf '%s' "$token_response" | php -r '$data = json_decode(stream_get_contents(STDIN), true, flags: JSON_THROW_ON_ERROR); echo $data["access_token"], PHP_EOL;' > "$token_file"
+    chmod 600 "$token_file"
+
+    token=$(tr -d '\n' < "$token_file")
+    curl --fail --silent --show-error \
+        --output /dev/null \
+        --header 'Accept: application/json' \
+        --header "Authorization: Bearer $token" \
+        http://localhost:18080/api/v1/products
+
+    printf 'Microservices JWT prepared in %s\n' "$token_file"
+    printf '%s\n' 'Login/token acquisition is complete and must remain outside timed commerce requests.'
+}
+
+case "${1:-}" in
+    init)
+        initialize_environment
+        ;;
+    start)
+        start_stack
+        ;;
+    reset)
+        reset_dataset
+        ;;
+    validate)
+        validate_dataset
+        ;;
+    auth)
+        prepare_authentication "${2:-}"
+        ;;
+    stop)
+        require_environment
+        compose down --remove-orphans
+        ;;
+    destroy)
+        require_environment
+        compose down --volumes --remove-orphans
+        ;;
+    *)
+        printf 'Usage: %s {init|start|reset|validate|auth [output-directory]|stop|destroy}\n' "$0" >&2
+        exit 1
+        ;;
+esac
+

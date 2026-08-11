@@ -1,2 +1,4 @@
 .env
+.env.experiment
+.experiment-auth
 .idea/

@@ -1,0 +1,72 @@
+repository=/Users/devnit/Documents/projects/tcc-monolith
+7bf7ad3dc25351a0891aa702f13f97421d4c32dd
+ M .gitignore
+ M app/Providers/AppServiceProvider.php
+ M database/factories/OrderFactory.php
+ M database/seeders/DatabaseSeeder.php
+ M routes/api.php
+ M routes/web.php
+ M tests/Feature/Api/OrderApiTest.php
+ M tests/Feature/OrderCrudTest.php
+?? .dockerignore
+?? .env.experiment.example
+?? Dockerfile.experiment
+?? app/Console/
+?? app/Http/Controllers/ExperimentAuthenticationController.php
+?? bin/
+?? config/experiment.php
+?? database/seeders/BenchmarkDataset.php
+?? docker-compose.experiment.yml
+?? docs/TCC_EXPERIMENT_READINESS.md
+?? tests/Feature/BenchmarkDatasetSeederTest.php
+?? tests/Feature/ExperimentAuthenticationTest.php
+
+repository=/Users/devnit/Documents/projects/tcc-container
+3ace4b451e060083063ee5b4f2367d700f451e71
+ M .gitignore
+?? .DS_Store
+?? .env.experiment.example
+?? Dockerfile.experiment-base
+?? benchmark/
+?? bin/
+?? docker-compose.experiment.yml
+?? docker/
+?? jmeter.log
+
+repository=/Users/devnit/Documents/projects/api-gateway-core
+613aa59137b386c3264f7bbdc745cf22f14433c7
+?? .DS_Store
+?? .dockerignore
+?? Dockerfile.experiment
+
+repository=/Users/devnit/Documents/projects/tcc-auth-service
+df23d58ecb03e82f648b92e90333e8a81fdb69db
+ M database/seeders/DatabaseSeeder.php
+?? .dockerignore
+?? Dockerfile.experiment
+?? app/Console/
+?? database/seeders/BenchmarkDataset.php
+?? tests/Feature/BenchmarkDatasetSeederTest.php
+
+repository=/Users/devnit/Documents/projects/tcc-product-service
+bd152f8feefba7f2016df39517404994744f7e56
+ M app/Providers/AppServiceProvider.php
+ M database/seeders/DatabaseSeeder.php
+?? .dockerignore
+?? Dockerfile.experiment
+?? app/Console/
+?? config/experiment.php
+?? database/seeders/BenchmarkDataset.php
+?? tests/Feature/BenchmarkDatasetSeederTest.php
+
+repository=/Users/devnit/Documents/projects/tcc-order-service
+767c5d4f2d929a8eb296c4e61ee7debd81c47ea8
+ M app/Providers/AppServiceProvider.php
+ M database/seeders/DatabaseSeeder.php
+?? .dockerignore
+?? Dockerfile.experiment
+?? app/Console/
+?? config/experiment.php
+?? database/seeders/BenchmarkDataset.php
+?? tests/Feature/BenchmarkDatasetSeederTest.php
+
