@@ -7,6 +7,7 @@ CONTAINER_ROOT=$(CDPATH= cd -- "$BENCHMARK_ROOT/.." && pwd)
 PROJECTS_ROOT=$(CDPATH= cd -- "$CONTAINER_ROOT/.." && pwd)
 MONOLITH_ROOT="$PROJECTS_ROOT/tcc-monolith"
 JMETER_PROPERTIES="$BENCHMARK_ROOT/jmeter/benchmark.properties"
+FINAL_IMAGE_MANIFEST="$BENCHMARK_ROOT/final-image-manifest.properties"
 
 architecture=
 scenario=
@@ -77,12 +78,14 @@ esac
 
 if [ "$architecture" = monolith ]; then
     experiment_command="$MONOLITH_ROOT/bin/tcc-experiment"
+    compose_file="$MONOLITH_ROOT/docker-compose.experiment.yml"
     target_port=18000
     order_id=1
     current_project=tcc-monolith-experiment
     opposite_project=tcc-microservices-experiment
 else
     experiment_command="$CONTAINER_ROOT/bin/tcc-experiment"
+    compose_file="$CONTAINER_ROOT/docker-compose.experiment.yml"
     target_port=18080
     order_id=20000000-0000-4000-8000-000000000001
     current_project=tcc-microservices-experiment
@@ -115,15 +118,101 @@ if [ -e "$run_directory" ]; then
     printf 'Refusing to overwrite preserved benchmark output: %s\n' "$run_directory" >&2
     exit 1
 fi
-mkdir -p "$run_directory"
 
-auth_directory=$(mktemp -d /private/tmp/tcc-benchmark-auth.XXXXXX)
-auth_properties="$auth_directory/auth.properties"
 counter_properties="$run_directory/thread-counters.properties"
 stack_started=false
 resource_pid=
 resource_ready_file="$run_directory/resource-collector.ready"
 resource_start_file="$run_directory/resource-collector.start"
+
+image_services()
+{
+    if [ "$architecture" = monolith ]; then
+        printf '%s\n' 'monolith mysql'
+    else
+        printf '%s\n' 'gateway auth product order mysql'
+    fi
+}
+
+image_id_for_reference()
+{
+    docker image inspect --format '{{.Id}}' "$1"
+}
+
+image_reference_for_service()
+{
+    case "$1" in
+        monolith) printf '%s\n' 'tcc-monolith-experiment:php8.4.19' ;;
+        gateway) printf '%s\n' 'tcc-gateway-experiment:java21' ;;
+        auth) printf '%s\n' 'tcc-auth-experiment:php8.4.19' ;;
+        product) printf '%s\n' 'tcc-product-experiment:php8.4.19' ;;
+        order) printf '%s\n' 'tcc-order-experiment:php8.4.19' ;;
+        mysql) printf '%s\n' 'mysql:8.4.8@sha256:2952e3be7807f06fc18de50b3ea1a632d5c70d63482ff7d7376fe3aa8999babf' ;;
+        *) printf 'Unknown image service: %s\n' "$1" >&2; exit 1 ;;
+    esac
+}
+
+manifest_image_id()
+{
+    manifest_key="image_id.$architecture.$1"
+    sed -n "s/^$manifest_key=//p" "$FINAL_IMAGE_MANIFEST"
+}
+
+verify_final_image_manifest()
+{
+    [ "$pilot" = false ] || return
+
+    if [ ! -f "$FINAL_IMAGE_MANIFEST" ]; then
+        printf 'Missing final image manifest: %s. Run benchmark/scripts/freeze-final-images.sh after build benchmarking and before definitive HTTP conditions.\n' "$FINAL_IMAGE_MANIFEST" >&2
+        exit 1
+    fi
+
+    for service in $(image_services); do
+        reference=$(image_reference_for_service "$service")
+        current_id=$(image_id_for_reference "$reference") || {
+            printf 'Missing prebuilt image for %s: %s\n' "$service" "$reference" >&2
+            exit 1
+        }
+        expected_id=$(manifest_image_id "$service")
+        if [ -z "$expected_id" ]; then
+            printf 'Final image manifest has no ID for %s.%s.\n' "$architecture" "$service" >&2
+            exit 1
+        fi
+        if [ "$current_id" != "$expected_id" ]; then
+            printf 'Final image mismatch for %s.%s: expected %s, found %s.\n' "$architecture" "$service" "$expected_id" "$current_id" >&2
+            exit 1
+        fi
+    done
+}
+
+record_image_identity()
+{
+    for service in $(image_services); do
+        container_id=$(docker compose \
+            --env-file "$CONTAINER_ROOT/.env.experiment" \
+            --project-name "$current_project" \
+            --file "$compose_file" \
+            ps --quiet "$service")
+        if [ -z "$container_id" ]; then
+            printf 'No running container found for image identity: %s\n' "$service" >&2
+            exit 1
+        fi
+        image_id=$(docker inspect --format '{{.Image}}' "$container_id")
+        if [ "$pilot" = false ]; then
+            expected_id=$(manifest_image_id "$service")
+            if [ "$image_id" != "$expected_id" ]; then
+                printf 'Started container image mismatch for %s.%s: expected %s, found %s.\n' "$architecture" "$service" "$expected_id" "$image_id" >&2
+                exit 1
+            fi
+        fi
+        printf 'image_id.%s=%s\n' "$service" "$image_id" >> "$run_directory/condition.properties"
+    done
+}
+
+verify_final_image_manifest
+mkdir -p "$run_directory"
+auth_directory=$(mktemp -d /private/tmp/tcc-benchmark-auth.XXXXXX)
+auth_properties="$auth_directory/auth.properties"
 
 stop_stack()
 {
@@ -304,6 +393,8 @@ record_runtime_environment
     printf 'compose_project=%s\n' "$current_project"
     printf 'started_at_utc=%s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
 } > "$run_directory/condition.properties"
+
+record_image_identity
 
 printf 'Stabilizing for %s seconds.\n' "$stabilization_seconds"
 sleep "$stabilization_seconds"

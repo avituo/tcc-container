@@ -1,4 +1,5 @@
 .env
 .env.experiment
 .experiment-auth
+benchmark/final-image-manifest.properties
 .idea/
