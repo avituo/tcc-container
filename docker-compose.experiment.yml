@@ -121,6 +121,9 @@ services:
     image: tcc-gateway-experiment:java21
     environment:
       SERVER_PORT: 8080
+      AUTH_SERVICE_URL: http://auth:8003
+      PRODUCT_SERVICE_URL: http://product:8001
+      ORDER_SERVICE_URL: http://order:8002
       JWT_SECRET: ${TCC_JWT_SECRET:?Set TCC_JWT_SECRET in .env.experiment}
       JWT_ISSUER: http://auth:8003
       JWT_AUDIENCE: tcc-api-gateway

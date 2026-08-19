@@ -14,6 +14,7 @@ scenario=
 concurrency=
 repetition=
 pilot=false
+pilot_attempt=
 stabilization_seconds=15
 warmup_seconds=30
 measurement_seconds=120
@@ -21,7 +22,7 @@ cooldown_seconds=15
 
 usage()
 {
-    printf '%s\n' "Usage: $0 --architecture {monolith|microservices} --scenario {products|orders|order-show|order-create} --concurrency {10|25|50|100} --repetition {1..5} [--pilot]" >&2
+    printf '%s\n' "Usage: $0 --architecture {monolith|microservices} --scenario {products|orders|order-show|order-create} --concurrency {10|25|50|100} --repetition {1..5} [--pilot [--pilot-attempt LABEL]]" >&2
     exit 1
 }
 
@@ -53,6 +54,12 @@ while [ "$#" -gt 0 ]; do
             measurement_seconds=30
             shift
             ;;
+        --pilot-attempt)
+            [ "$#" -ge 2 ] || usage
+            [ -n "$2" ] || usage
+            pilot_attempt=$2
+            shift 2
+            ;;
         *)
             usage
             ;;
@@ -69,6 +76,19 @@ if [ "$pilot" = true ] && { [ "$scenario" != products ] || [ "$concurrency" != 1
     exit 1
 fi
 
+if [ -n "$pilot_attempt" ]; then
+    [ "$pilot" = true ] || {
+        printf '%s\n' '--pilot-attempt may only be used with --pilot.' >&2
+        exit 1
+    }
+    case "$pilot_attempt" in
+        *[!A-Za-z0-9._-]*)
+            printf '%s\n' '--pilot-attempt must contain only letters, numbers, dots, underscores, or hyphens.' >&2
+            exit 1
+            ;;
+    esac
+fi
+
 case "$scenario" in
     products) plan="$BENCHMARK_ROOT/jmeter/tcc-products-v1.jmx" ;;
     orders) plan="$BENCHMARK_ROOT/jmeter/tcc-orders-v1.jmx" ;;
@@ -79,6 +99,7 @@ esac
 if [ "$architecture" = monolith ]; then
     experiment_command="$MONOLITH_ROOT/bin/tcc-experiment"
     compose_file="$MONOLITH_ROOT/docker-compose.experiment.yml"
+    compose_env_file="$MONOLITH_ROOT/.env.experiment"
     target_port=18000
     order_id=1
     current_project=tcc-monolith-experiment
@@ -86,18 +107,74 @@ if [ "$architecture" = monolith ]; then
 else
     experiment_command="$CONTAINER_ROOT/bin/tcc-experiment"
     compose_file="$CONTAINER_ROOT/docker-compose.experiment.yml"
+    compose_env_file="$CONTAINER_ROOT/.env.experiment"
     target_port=18080
     order_id=20000000-0000-4000-8000-000000000001
     current_project=tcc-microservices-experiment
     opposite_project=tcc-monolith-experiment
 fi
 
-command -v jmeter >/dev/null 2>&1 || {
-    printf '%s\n' 'Apache JMeter is not on PATH.' >&2
+for required_command in docker curl php python3 java git shasum mktemp; do
+    command -v "$required_command" >/dev/null 2>&1 || {
+        printf 'Required command is not on PATH: %s\n' "$required_command" >&2
+        exit 1
+    }
+done
+
+[ -x "$experiment_command" ] || {
+    printf 'Experiment command is missing or not executable: %s\n' "$experiment_command" >&2
+    exit 1
+}
+[ -r "$compose_file" ] || {
+    printf 'Experiment Compose file is not readable: %s\n' "$compose_file" >&2
+    exit 1
+}
+[ -r "$compose_env_file" ] || {
+    printf 'Missing experiment environment: %s. Run %s init.\n' "$compose_env_file" "$experiment_command" >&2
+    exit 1
+}
+[ -r "$plan" ] || {
+    printf 'JMeter plan is not readable: %s\n' "$plan" >&2
+    exit 1
+}
+[ -r "$JMETER_PROPERTIES" ] || {
+    printf 'JMeter properties are not readable: %s\n' "$JMETER_PROPERTIES" >&2
     exit 1
 }
 
-jmeter_version=$(jmeter --version 2>&1 | awk '/[0-9]+\.[0-9]+\.[0-9]+$/ { print $NF; exit }')
+for repository in \
+    "$MONOLITH_ROOT" \
+    "$CONTAINER_ROOT" \
+    "$PROJECTS_ROOT/api-gateway-core" \
+    "$PROJECTS_ROOT/tcc-auth-service" \
+    "$PROJECTS_ROOT/tcc-product-service" \
+    "$PROJECTS_ROOT/tcc-order-service"; do
+    git -C "$repository" rev-parse --git-dir >/dev/null 2>&1 || {
+        printf 'Required Git repository is missing or invalid: %s\n' "$repository" >&2
+        exit 1
+    }
+done
+
+temporary_root=${TCC_BENCHMARK_TMPDIR:-${TMPDIR:-/tmp}}
+[ -d "$temporary_root" ] && [ -w "$temporary_root" ] || {
+    printf 'Benchmark temporary directory must exist and be writable: %s\n' "$temporary_root" >&2
+    exit 1
+}
+
+local_jmeter="$CONTAINER_ROOT/.tools/apache-jmeter-5.6.3/bin/jmeter"
+if [ -n "${TCC_JMETER_BIN:-}" ]; then
+    jmeter_command=$TCC_JMETER_BIN
+elif command -v jmeter >/dev/null 2>&1; then
+    jmeter_command=jmeter
+else
+    jmeter_command=$local_jmeter
+fi
+command -v "$jmeter_command" >/dev/null 2>&1 || {
+    printf 'Apache JMeter is not available: %s. Install JMeter 5.6.3 locally, add it to PATH, or set TCC_JMETER_BIN.\n' "$jmeter_command" >&2
+    exit 1
+}
+
+jmeter_version=$("$jmeter_command" -j /dev/null --version 2>&1 | awk '/[0-9]+\.[0-9]+\.[0-9]+$/ { print $NF; exit }')
 if [ "$jmeter_version" != 5.6.3 ]; then
     printf 'Apache JMeter 5.6.3 is required; found %s.\n' "${jmeter_version:-unknown}" >&2
     exit 1
@@ -113,7 +190,11 @@ if [ "$pilot" = true ]; then
     result_class=pilot
 fi
 
-run_directory="$BENCHMARK_ROOT/results/$result_class/$scenario/c$concurrency/r$repetition/$architecture"
+result_name=$architecture
+if [ -n "$pilot_attempt" ]; then
+    result_name="$architecture-attempt-$pilot_attempt"
+fi
+run_directory="$BENCHMARK_ROOT/results/$result_class/$scenario/c$concurrency/r$repetition/$result_name"
 if [ -e "$run_directory" ]; then
     printf 'Refusing to overwrite preserved benchmark output: %s\n' "$run_directory" >&2
     exit 1
@@ -160,7 +241,7 @@ manifest_image_id()
 
 verify_final_image_manifest()
 {
-    [ "$pilot" = false ] || return
+    [ "$pilot" = false ] || return 0
 
     if [ ! -f "$FINAL_IMAGE_MANIFEST" ]; then
         printf 'Missing final image manifest: %s. Run benchmark/scripts/freeze-final-images.sh after build benchmarking and before definitive HTTP conditions.\n' "$FINAL_IMAGE_MANIFEST" >&2
@@ -189,7 +270,7 @@ record_image_identity()
 {
     for service in $(image_services); do
         container_id=$(docker compose \
-            --env-file "$CONTAINER_ROOT/.env.experiment" \
+            --env-file "$compose_env_file" \
             --project-name "$current_project" \
             --file "$compose_file" \
             ps --quiet "$service")
@@ -211,7 +292,7 @@ record_image_identity()
 
 verify_final_image_manifest
 mkdir -p "$run_directory"
-auth_directory=$(mktemp -d /private/tmp/tcc-benchmark-auth.XXXXXX)
+auth_directory=$(mktemp -d "$temporary_root/tcc-benchmark-auth.XXXXXX")
 auth_properties="$auth_directory/auth.properties"
 
 stop_stack()
@@ -271,16 +352,17 @@ wait_for_microservice()
 
 start_without_build()
 {
+    stack_started=true
     if [ "$architecture" = monolith ]; then
         docker compose \
-            --env-file "$MONOLITH_ROOT/.env.experiment" \
+            --env-file "$compose_env_file" \
             --project-name tcc-monolith-experiment \
             --file "$MONOLITH_ROOT/docker-compose.experiment.yml" \
             up --detach --no-build mysql monolith
         wait_for_url http://localhost:18000/up
     else
         docker compose \
-            --env-file "$CONTAINER_ROOT/.env.experiment" \
+            --env-file "$compose_env_file" \
             --project-name tcc-microservices-experiment \
             --file "$CONTAINER_ROOT/docker-compose.experiment.yml" \
             up --detach --no-build mysql auth product order gateway
@@ -289,7 +371,6 @@ start_without_build()
         wait_for_microservice order http://127.0.0.1:8002/up
         wait_for_url http://localhost:18080/actuator/health
     fi
-    stack_started=true
 }
 
 write_auth_properties()
@@ -357,7 +438,7 @@ record_runtime_environment()
         printf '%s\n' '[docker resource capacity]'
         docker info --format 'CPUs={{.NCPU}} MemoryBytes={{.MemTotal}} OperatingSystem={{.OperatingSystem}} Architecture={{.Architecture}}'
         printf '%s\n' '[jmeter version]'
-        jmeter --version
+        "$jmeter_command" -j /dev/null --version
         printf '%s\n' '[load-generator java version]'
         java -version
         printf '%s\n' '[load-generator operating system]'
@@ -400,7 +481,7 @@ printf 'Stabilizing for %s seconds.\n' "$stabilization_seconds"
 sleep "$stabilization_seconds"
 
 printf 'Running excluded warm-up for %s seconds.\n' "$warmup_seconds"
-jmeter -n \
+"$jmeter_command" -n \
     -t "$plan" \
     -q "$JMETER_PROPERTIES" \
     -q "$auth_properties" \
@@ -446,7 +527,7 @@ done
 
 date -u '+%Y-%m-%dT%H:%M:%SZ' > "$resource_start_file"
 
-jmeter -n \
+"$jmeter_command" -n \
     -t "$plan" \
     -q "$JMETER_PROPERTIES" \
     -q "$auth_properties" \

@@ -167,9 +167,6 @@ def collect(
         current_refresh: dict[str, dict[str, object]] = {}
         try:
             for line in process.stdout:
-                if ANSI_ESCAPE.search(line):
-                    current_refresh = {}
-
                 normalized_line = ANSI_ESCAPE.sub("", line).strip()
                 if not normalized_line:
                     continue

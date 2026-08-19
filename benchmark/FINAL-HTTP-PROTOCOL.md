@@ -21,3 +21,9 @@ Consequently, all definitive HTTP conditions are executed against the same prebu
 For each condition, the runner starts the already-built images, resets and validates the deterministic dataset, authenticates outside the measured workload, stabilizes, runs the excluded warm-up, and then performs the timed HTTP workload with one-second Docker resource sampling. It stops the stack after the cooldown.
 
 Pilot conditions are excluded from the frozen-manifest requirement, but still record the image IDs used in their metadata.
+
+The runner creates temporary authentication material under `TCC_BENCHMARK_TMPDIR` when set, otherwise under the operating system's `TMPDIR`, and finally falls back to `/tmp`. This keeps the same command portable between macOS and Linux without embedding an operating-system-specific path.
+
+Apache JMeter 5.6.3 is selected in this order: `TCC_JMETER_BIN=/absolute/path/to/jmeter`, `jmeter` on `PATH`, or the local installation at `.tools/apache-jmeter-5.6.3/bin/jmeter`. The runner still rejects every version other than 5.6.3. The local `.tools/` directory is ignored by Git.
+
+An additional pilot may be preserved without moving or overwriting the canonical pilot by passing `--pilot-attempt LABEL`. Its output directory is named `{architecture}-attempt-{LABEL}`. The option is rejected outside `--pilot`, and definitive result paths remain unchanged.

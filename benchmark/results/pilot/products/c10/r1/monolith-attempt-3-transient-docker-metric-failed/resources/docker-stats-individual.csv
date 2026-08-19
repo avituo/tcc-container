@@ -1,5 +1,0 @@
-sample_index,captured_at_utc,architecture,service,container_id,container_name,cpu_percent,memory_used_bytes,memory_limit_bytes,memory_percent,pids,network_io,block_io
-1,2026-08-11T13:33:10.650079+00:00,monolith,monolith,687c65a60f291b71bf01b6d99321ca3206c4e24fd8b9ce6114b62990a64f994a,tcc-monolith-experiment-monolith-1,0.03,83162563,1073741824,7.74,3,11.1MB / 8.74MB,0B / 156kB
-1,2026-08-11T13:33:10.650079+00:00,monolith,mysql,5b9ec28831609c60b0af8bb5ac234c51ff96767b6126c607a257075255f6e668,tcc-monolith-experiment-mysql-1,0.92,520722842,1073741824,48.49,37,5.83MB / 10.5MB,34.9MB / 127MB
-2,2026-08-11T13:33:12.103782+00:00,monolith,monolith,687c65a60f291b71bf01b6d99321ca3206c4e24fd8b9ce6114b62990a64f994a,tcc-monolith-experiment-monolith-1,0.03,83162563,1073741824,7.74,3,11.1MB / 8.74MB,0B / 156kB
-2,2026-08-11T13:33:12.103782+00:00,monolith,mysql,5b9ec28831609c60b0af8bb5ac234c51ff96767b6126c607a257075255f6e668,tcc-monolith-experiment-mysql-1,0.92,520722842,1073741824,48.49,37,5.83MB / 10.5MB,34.9MB / 127MB
