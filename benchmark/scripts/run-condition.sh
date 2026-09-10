@@ -7,7 +7,7 @@ CONTAINER_ROOT=$(CDPATH= cd -- "$BENCHMARK_ROOT/.." && pwd)
 PROJECTS_ROOT=$(CDPATH= cd -- "$CONTAINER_ROOT/.." && pwd)
 MONOLITH_ROOT="$PROJECTS_ROOT/tcc-monolith"
 JMETER_PROPERTIES="$BENCHMARK_ROOT/jmeter/benchmark.properties"
-FINAL_IMAGE_MANIFEST="$BENCHMARK_ROOT/final-image-manifest.properties"
+PARITY_CHECK="$SCRIPT_DIRECTORY/verify-laravel-parity.py"
 
 architecture=
 scenario=
@@ -15,6 +15,7 @@ concurrency=
 repetition=
 pilot=false
 pilot_attempt=
+result_set=
 stabilization_seconds=15
 warmup_seconds=30
 measurement_seconds=120
@@ -22,7 +23,7 @@ cooldown_seconds=15
 
 usage()
 {
-    printf '%s\n' "Usage: $0 --architecture {monolith|microservices} --scenario {products|orders|order-show|order-create} --concurrency {10|25|50|100} --repetition {1..5} [--pilot [--pilot-attempt LABEL]]" >&2
+    printf '%s\n' "Usage: $0 --architecture {monolith|microservices} --scenario {products|orders|order-show|order-create} --concurrency {10|25|50|100} --repetition {1..5} [--result-set LABEL] [--pilot [--pilot-attempt LABEL]]" >&2
     exit 1
 }
 
@@ -60,6 +61,12 @@ while [ "$#" -gt 0 ]; do
             pilot_attempt=$2
             shift 2
             ;;
+        --result-set)
+            [ "$#" -ge 2 ] || usage
+            [ -n "$2" ] || usage
+            result_set=$2
+            shift 2
+            ;;
         *)
             usage
             ;;
@@ -70,6 +77,15 @@ case "$architecture" in monolith|microservices) ;; *) usage ;; esac
 case "$scenario" in products|orders|order-show|order-create) ;; *) usage ;; esac
 case "$concurrency" in 10|25|50|100) ;; *) usage ;; esac
 case "$repetition" in 1|2|3|4|5) ;; *) usage ;; esac
+
+if [ -n "$result_set" ]; then
+    case "$result_set" in *[!A-Za-z0-9._-]*) usage ;; esac
+    RESULTS_ROOT="$BENCHMARK_ROOT/results/$result_set"
+    FINAL_IMAGE_MANIFEST="$RESULTS_ROOT/final-image-manifest.properties"
+else
+    RESULTS_ROOT="$BENCHMARK_ROOT/results"
+    FINAL_IMAGE_MANIFEST="$BENCHMARK_ROOT/final-image-manifest.properties"
+fi
 
 if [ "$pilot" = true ] && { [ "$scenario" != products ] || [ "$concurrency" != 10 ] || [ "$repetition" != 1 ]; }; then
     printf '%s\n' 'The frozen pilot is only products, concurrency 10, repetition 1.' >&2
@@ -120,6 +136,8 @@ for required_command in docker curl php python3 java git shasum mktemp; do
         exit 1
     }
 done
+
+laravel_version=$(python3 "$PARITY_CHECK" --projects-root "$PROJECTS_ROOT")
 
 [ -x "$experiment_command" ] || {
     printf 'Experiment command is missing or not executable: %s\n' "$experiment_command" >&2
@@ -194,7 +212,7 @@ result_name=$architecture
 if [ -n "$pilot_attempt" ]; then
     result_name="$architecture-attempt-$pilot_attempt"
 fi
-run_directory="$BENCHMARK_ROOT/results/$result_class/$scenario/c$concurrency/r$repetition/$result_name"
+run_directory="$RESULTS_ROOT/$result_class/$scenario/c$concurrency/r$repetition/$result_name"
 if [ -e "$run_directory" ]; then
     printf 'Refusing to overwrite preserved benchmark output: %s\n' "$run_directory" >&2
     exit 1
@@ -239,6 +257,29 @@ manifest_image_id()
     sed -n "s/^$manifest_key=//p" "$FINAL_IMAGE_MANIFEST"
 }
 
+manifest_laravel_version()
+{
+    manifest_key="laravel_version.$architecture.$1"
+    sed -n "s/^$manifest_key=//p" "$FINAL_IMAGE_MANIFEST"
+}
+
+manifest_composer_lock_hash()
+{
+    manifest_key="composer_lock_sha256.$architecture.$1"
+    sed -n "s/^$manifest_key=//p" "$FINAL_IMAGE_MANIFEST"
+}
+
+source_directory_for_service()
+{
+    case "$1" in
+        monolith) printf '%s\n' "$MONOLITH_ROOT" ;;
+        auth) printf '%s\n' "$PROJECTS_ROOT/tcc-auth-service" ;;
+        product) printf '%s\n' "$PROJECTS_ROOT/tcc-product-service" ;;
+        order) printf '%s\n' "$PROJECTS_ROOT/tcc-order-service" ;;
+        *) printf 'Unknown Laravel service: %s\n' "$1" >&2; exit 1 ;;
+    esac
+}
+
 verify_final_image_manifest()
 {
     [ "$pilot" = false ] || return 0
@@ -264,6 +305,31 @@ verify_final_image_manifest()
             exit 1
         fi
     done
+
+
+    for service in $(laravel_services); do
+        expected_version=$(manifest_laravel_version "$service")
+        if [ "$expected_version" != "$laravel_version" ]; then
+            printf 'Final image manifest Laravel mismatch for %s.%s: expected %s, found %s.\n' "$architecture" "$service" "$laravel_version" "${expected_version:-missing}" >&2
+            exit 1
+        fi
+        source_directory=$(source_directory_for_service "$service")
+        source_hash=$(shasum -a 256 "$source_directory/composer.lock" | awk '{ print $1 }')
+        manifest_hash=$(manifest_composer_lock_hash "$service")
+        if [ "$manifest_hash" != "$source_hash" ]; then
+            printf 'Final image manifest composer.lock mismatch for %s.%s: expected %s, found %s.\n' "$architecture" "$service" "$source_hash" "${manifest_hash:-missing}" >&2
+            exit 1
+        fi
+    done
+}
+
+laravel_services()
+{
+    if [ "$architecture" = monolith ]; then
+        printf '%s\n' 'monolith'
+    else
+        printf '%s\n' 'auth product order'
+    fi
 }
 
 record_image_identity()
@@ -287,6 +353,39 @@ record_image_identity()
             fi
         fi
         printf 'image_id.%s=%s\n' "$service" "$image_id" >> "$run_directory/condition.properties"
+    done
+}
+
+record_laravel_identity()
+{
+    for service in $(laravel_services); do
+        output=$(docker compose \
+            --env-file "$compose_env_file" \
+            --project-name "$current_project" \
+            --file "$compose_file" \
+            exec -T "$service" php artisan --version)
+        runtime_version=$(printf '%s\n' "$output" | awk '/^Laravel Framework / { print $3; exit }')
+        if [ "$runtime_version" != "$laravel_version" ]; then
+            printf 'Started container Laravel mismatch for %s.%s: expected %s, found %s.\n' "$architecture" "$service" "$laravel_version" "${runtime_version:-unknown}" >&2
+            exit 1
+        fi
+        runtime_lock_hash=$(docker compose \
+            --env-file "$compose_env_file" \
+            --project-name "$current_project" \
+            --file "$compose_file" \
+            exec -T "$service" php -r 'echo hash_file("sha256", "composer.lock"), PHP_EOL;')
+        if [ "$pilot" = true ]; then
+            source_directory=$(source_directory_for_service "$service")
+            expected_lock_hash=$(shasum -a 256 "$source_directory/composer.lock" | awk '{ print $1 }')
+        else
+            expected_lock_hash=$(manifest_composer_lock_hash "$service")
+        fi
+        if [ "$runtime_lock_hash" != "$expected_lock_hash" ]; then
+            printf 'Started container composer.lock mismatch for %s.%s: expected %s, found %s.\n' "$architecture" "$service" "$expected_lock_hash" "${runtime_lock_hash:-unknown}" >&2
+            exit 1
+        fi
+        printf 'laravel_version.%s=%s\n' "$service" "$runtime_version" >> "$run_directory/condition.properties"
+        printf 'composer_lock_sha256.%s=%s\n' "$service" "$runtime_lock_hash" >> "$run_directory/condition.properties"
     done
 }
 
@@ -457,7 +556,8 @@ record_repository_state
 record_runtime_environment
 
 {
-    printf 'protocol_version=1\n'
+    printf 'protocol_version=2\n'
+    printf 'result_set=%s\n' "${result_set:-legacy-default}"
     printf 'result_class=%s\n' "$result_class"
     printf 'architecture=%s\n' "$architecture"
     printf 'scenario=%s\n' "$scenario"
@@ -476,6 +576,7 @@ record_runtime_environment
 } > "$run_directory/condition.properties"
 
 record_image_identity
+record_laravel_identity
 
 printf 'Stabilizing for %s seconds.\n' "$stabilization_seconds"
 sleep "$stabilization_seconds"
