@@ -1,0 +1,18 @@
+{
+  "average_ms": 118.47803514376997,
+  "error_count": 0,
+  "error_messages": {},
+  "error_percentage": 0.0,
+  "maximum_ms": 231.0,
+  "median_ms": 118.0,
+  "minimum_ms": 27.0,
+  "p90_ms": 125.0,
+  "p95_ms": 127.0,
+  "p99_ms": 134.0,
+  "percentile_method": "nearest-rank",
+  "sample_count": 10016,
+  "standard_deviation_method": "population",
+  "standard_deviation_ms": 6.128003988294561,
+  "throughput_denominator_seconds": 120,
+  "throughput_requests_per_second": 83.46666666666667
+}

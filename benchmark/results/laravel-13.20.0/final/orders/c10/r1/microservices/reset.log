@@ -1,0 +1,132 @@
+ Container tcc-microservices-experiment-auth-1 Running 
+ Container tcc-microservices-experiment-product-1 Running 
+ Container tcc-microservices-experiment-order-1 Running 
+ Container tcc-microservices-experiment-gateway-1 Running 
+ Container tcc-microservices-experiment-mysql-1 Running 
+ Container tcc-microservices-experiment-mysql-1 Waiting 
+ Container tcc-microservices-experiment-mysql-1 Waiting 
+ Container tcc-microservices-experiment-mysql-1 Healthy 
+ Container tcc-microservices-experiment-mysql-1 Healthy 
+ Container tcc-microservices-experiment-mysql-1 Waiting 
+ Container tcc-microservices-experiment-mysql-1 Healthy 
+Reset targets: tcc_auth_experiment, tcc_products_experiment, tcc_orders_experiment
+
+   INFO  Clearing cached bootstrap files.  
+
+  config ......................................................... 2.18ms DONE
+  cache .......................................................... 2.15ms DONE
+  compiled ....................................................... 0.52ms DONE
+  events ......................................................... 0.36ms DONE
+  routes ......................................................... 0.50ms DONE
+  views .......................................................... 5.26ms DONE
+
+
+  Dropping all tables .......................................... 101.97ms DONE
+
+   INFO  Preparing database.  
+
+  Creating migration table ...................................... 42.90ms DONE
+
+   INFO  Running migrations.  
+
+  0001_01_01_000001_create_cache_table ......................... 125.75ms DONE
+  2026_07_20_124230_create_users_table .......................... 68.08ms DONE
+  2026_07_22_183826_add_roles_to_users_table .................... 83.19ms DONE
+
+
+   INFO  Seeding database.  
+
+
+   INFO  Configuration cached successfully.  
+
+
+   INFO  Routes cached successfully.  
+
+
+   INFO  Clearing cached bootstrap files.  
+
+  config ......................................................... 1.95ms DONE
+  cache .......................................................... 2.17ms DONE
+  compiled ....................................................... 0.51ms DONE
+  events ......................................................... 0.39ms DONE
+  routes ......................................................... 0.43ms DONE
+  views .......................................................... 5.15ms DONE
+
+
+  Dropping all tables .......................................... 231.38ms DONE
+
+   INFO  Preparing database.  
+
+  Creating migration table ...................................... 50.96ms DONE
+
+   INFO  Running migrations.  
+
+  0001_01_01_000001_create_cache_table ......................... 130.40ms DONE
+  0001_01_01_000002_create_jobs_table .......................... 201.17ms DONE
+  2026_06_07_225747_create_products_table ....................... 72.81ms DONE
+  2026_07_22_183150_correct_product_catalog_schema ............. 673.77ms DONE
+  2026_07_22_183152_create_stock_reservations_table ............ 130.93ms DONE
+  2026_07_22_183153_create_stock_reservation_items_table ....... 311.49ms DONE
+
+
+   INFO  Seeding database.  
+
+
+   INFO  Configuration cached successfully.  
+
+
+   INFO  Routes cached successfully.  
+
+
+   INFO  Clearing cached bootstrap files.  
+
+  config ......................................................... 1.55ms DONE
+  cache .......................................................... 2.14ms DONE
+  compiled ....................................................... 0.55ms DONE
+  events ......................................................... 0.37ms DONE
+  routes ......................................................... 0.41ms DONE
+  views .......................................................... 5.06ms DONE
+
+
+  Dropping all tables .......................................... 192.27ms DONE
+
+   INFO  Preparing database.  
+
+  Creating migration table ...................................... 46.47ms DONE
+
+   INFO  Running migrations.  
+
+  0001_01_01_000001_create_cache_table ......................... 139.73ms DONE
+  0001_01_01_000002_create_jobs_table .......................... 197.78ms DONE
+  2026_07_22_183830_create_orders_table ........................ 234.86ms DONE
+  2026_07_22_183831_create_order_items_table ................... 212.23ms DONE
+  2026_07_29_140158_add_name_to_orders_table ................... 226.86ms DONE
+
+
+   INFO  Seeding database.  
+
+
+   INFO  Configuration cached successfully.  
+
+
+   INFO  Routes cached successfully.  
+
+database=tcc_auth_experiment
+user_count=100
+logical_fingerprint=44cb257fd1b0fbd23dde712b5250ca3d002eded4c2a9e911c74c80c94eb073a7
+benchmark_users=VALID
+database=tcc_products_experiment
+product_count=1000
+stock_reservation_count=0
+logical_fingerprint=44cb257fd1b0fbd23dde712b5250ca3d002eded4c2a9e911c74c80c94eb073a7
+benchmark_products=VALID
+database=tcc_orders_experiment
+order_count=5000
+order_item_count=10000
+status_distribution={"pending":2500,"paid":1500,"cancelled":1000}
+orders_per_user_min=50
+orders_per_user_max=50
+logical_fingerprint=44cb257fd1b0fbd23dde712b5250ca3d002eded4c2a9e911c74c80c94eb073a7
+order_mapping_1=20000000-0000-4000-8000-000000000001
+order_mapping_5000=20000000-0000-4000-8000-000000005000
+benchmark_orders=VALID

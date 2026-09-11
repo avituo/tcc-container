@@ -1,0 +1,28 @@
+repository=/home/avituo/projects/tcc/tcc-monolith
+3fd412ee2154dff9bfc69a08897f22be4d3ace1e
+
+repository=/home/avituo/projects/tcc/tcc-container
+e035b18e0bae901cfabda4e7bbd60f81a67c20cb
+?? benchmark/analysis/__pycache__/
+?? benchmark/analysis/tests/__pycache__/
+?? benchmark/analysis/tests/test_laravel_parity.py
+?? benchmark/results/build/
+?? benchmark/results/final/
+?? benchmark/results/laravel-13.20.0/
+?? benchmark/results/pilot/
+?? benchmark/results/startup/
+?? benchmark/scripts/__pycache__/
+?? benchmark/scripts/verify-laravel-parity.py
+
+repository=/home/avituo/projects/tcc/api-gateway-core
+582c8a0c74a867618833fc2f5d797ce7f5d7a6da
+
+repository=/home/avituo/projects/tcc/tcc-auth-service
+b43f7bdc3e3ef6d3ac58344465f46245595d4251
+
+repository=/home/avituo/projects/tcc/tcc-product-service
+90d9672bdc58d37e5f07cec787584fcaff1a724c
+
+repository=/home/avituo/projects/tcc/tcc-order-service
+e7053eb1e8329a41b94b2fd6c8071f29a43806b0
+

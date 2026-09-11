@@ -1,0 +1,220 @@
+2026-09-10 04:47:22,112 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2026-09-10 04:47:22,127 INFO o.a.j.JMeter: Loading user properties from: /home/avituo/projects/tcc/tcc-container/.tools/apache-jmeter-5.6.3/bin/user.properties
+2026-09-10 04:47:22,127 INFO o.a.j.JMeter: Loading system properties from: /home/avituo/projects/tcc/tcc-container/.tools/apache-jmeter-5.6.3/bin/system.properties
+2026-09-10 04:47:22,128 INFO o.a.j.JMeter: Loading additional properties from: /home/avituo/projects/tcc/tcc-container/benchmark/jmeter/benchmark.properties
+2026-09-10 04:47:22,128 INFO o.a.j.JMeter: Loading additional properties from: /tmp/tcc-benchmark-auth.NdRZKX/auth.properties
+2026-09-10 04:47:22,128 INFO o.a.j.JMeter: Loading additional properties from: /home/avituo/projects/tcc/tcc-container/benchmark/results/laravel-13.20.0/final/orders/c50/r3/microservices/thread-counters.properties
+2026-09-10 04:47:22,128 INFO o.a.j.JMeter: Setting JMeter property: threads=50
+2026-09-10 04:47:22,128 INFO o.a.j.JMeter: Setting JMeter property: duration_seconds=120
+2026-09-10 04:47:22,128 INFO o.a.j.JMeter: Setting JMeter property: target_host=localhost
+2026-09-10 04:47:22,128 INFO o.a.j.JMeter: Setting JMeter property: target_port=18080
+2026-09-10 04:47:22,128 INFO o.a.j.JMeter: Setting JMeter property: tcc.order.id=20000000-0000-4000-8000-000000000001
+2026-09-10 04:47:22,128 INFO o.a.j.JMeter: Setting JMeter property: repetition=3
+2026-09-10 04:47:22,137 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
+2026-09-10 04:47:22,137 INFO o.a.j.JMeter: Version 5.6.3
+2026-09-10 04:47:22,137 INFO o.a.j.JMeter: java.version=21.0.11
+2026-09-10 04:47:22,137 INFO o.a.j.JMeter: java.vm.name=OpenJDK 64-Bit Server VM
+2026-09-10 04:47:22,137 INFO o.a.j.JMeter: os.name=Linux
+2026-09-10 04:47:22,137 INFO o.a.j.JMeter: os.arch=amd64
+2026-09-10 04:47:22,137 INFO o.a.j.JMeter: os.version=7.0.11-76070011-generic
+2026-09-10 04:47:22,137 INFO o.a.j.JMeter: file.encoding=UTF-8
+2026-09-10 04:47:22,137 INFO o.a.j.JMeter: java.awt.headless=true
+2026-09-10 04:47:22,137 INFO o.a.j.JMeter: Max memory     =1073741824
+2026-09-10 04:47:22,137 INFO o.a.j.JMeter: Available Processors =16
+2026-09-10 04:47:22,146 INFO o.a.j.JMeter: Default Locale=English (EN)
+2026-09-10 04:47:22,146 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2026-09-10 04:47:22,146 INFO o.a.j.JMeter: JMeterHome=/home/avituo/projects/tcc/tcc-container/.tools/apache-jmeter-5.6.3
+2026-09-10 04:47:22,146 INFO o.a.j.JMeter: user.dir  =/home/avituo/projects/tcc/tcc-container
+2026-09-10 04:47:22,146 INFO o.a.j.JMeter: PWD       =/home/avituo/projects/tcc/tcc-container
+2026-09-10 04:47:22,164 INFO o.a.j.JMeter: IP: 192.168.1.16 Name: pop-os FullName: pop-os.home
+2026-09-10 04:47:22,175 INFO o.a.j.s.FileServer: Default base='/home/avituo/projects/tcc/tcc-container'
+2026-09-10 04:47:22,178 INFO o.a.j.s.FileServer: Set new base='/home/avituo/projects/tcc/tcc-container/benchmark/jmeter'
+2026-09-10 04:47:22,365 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2026-09-10 04:47:22,391 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2026-09-10 04:47:22,395 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2026-09-10 04:47:22,399 INFO o.a.j.s.SaveService: Loading file: /home/avituo/projects/tcc/tcc-container/benchmark/jmeter/tcc-orders-v1.jmx
+2026-09-10 04:47:22,451 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-09-10 04:47:22,451 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-09-10 04:47:22,451 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-09-10 04:47:22,451 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-09-10 04:47:22,451 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2026-09-10 04:47:22,452 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2026-09-10 04:47:22,480 INFO o.a.j.JMeter: Creating summariser <summary>
+2026-09-10 04:47:22,498 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2026-09-10 04:47:22,499 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2026-09-10 04:47:22,499 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2026-09-10 04:47:22,505 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2026-09-10 04:47:22,505 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2026-09-10 04:47:22,759 INFO o.a.j.JMeter: Running test (1789026442759)
+2026-09-10 04:47:22,782 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : TCC orders
+2026-09-10 04:47:22,782 INFO o.a.j.e.StandardJMeterEngine: Starting 50 threads for group TCC orders.
+2026-09-10 04:47:22,782 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2026-09-10 04:47:22,783 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=50 ramp-up=0 delayedStart=false
+2026-09-10 04:47:22,790 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-3
+2026-09-10 04:47:22,790 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-5
+2026-09-10 04:47:22,790 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-2
+2026-09-10 04:47:22,790 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-4
+2026-09-10 04:47:22,790 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-1
+2026-09-10 04:47:22,790 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-6
+2026-09-10 04:47:22,791 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-7
+2026-09-10 04:47:22,791 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-8
+2026-09-10 04:47:22,792 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-9
+2026-09-10 04:47:22,793 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-10
+2026-09-10 04:47:22,794 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-11
+2026-09-10 04:47:22,794 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-12
+2026-09-10 04:47:22,795 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-13
+2026-09-10 04:47:22,797 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-14
+2026-09-10 04:47:22,797 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-15
+2026-09-10 04:47:22,799 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-16
+2026-09-10 04:47:22,799 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-17
+2026-09-10 04:47:22,800 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-18
+2026-09-10 04:47:22,800 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-19
+2026-09-10 04:47:22,801 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-20
+2026-09-10 04:47:22,801 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-21
+2026-09-10 04:47:22,802 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-22
+2026-09-10 04:47:22,803 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-23
+2026-09-10 04:47:22,803 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-24
+2026-09-10 04:47:22,804 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-25
+2026-09-10 04:47:22,804 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-26
+2026-09-10 04:47:22,805 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-27
+2026-09-10 04:47:22,805 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-28
+2026-09-10 04:47:22,806 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-29
+2026-09-10 04:47:22,807 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-30
+2026-09-10 04:47:22,807 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-31
+2026-09-10 04:47:22,808 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-32
+2026-09-10 04:47:22,808 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-33
+2026-09-10 04:47:22,809 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-34
+2026-09-10 04:47:22,809 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-35
+2026-09-10 04:47:22,810 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-36
+2026-09-10 04:47:22,810 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-37
+2026-09-10 04:47:22,811 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-38
+2026-09-10 04:47:22,811 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-39
+2026-09-10 04:47:22,811 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-40
+2026-09-10 04:47:22,812 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-41
+2026-09-10 04:47:22,813 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-42
+2026-09-10 04:47:22,814 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-43
+2026-09-10 04:47:22,814 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-44
+2026-09-10 04:47:22,814 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-45
+2026-09-10 04:47:22,815 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-46
+2026-09-10 04:47:22,815 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-47
+2026-09-10 04:47:22,816 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-48
+2026-09-10 04:47:22,817 INFO o.a.j.p.h.s.HTTPHCAbstractImpl: Local host = pop-os
+2026-09-10 04:47:22,816 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-49
+2026-09-10 04:47:22,817 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2026-09-10 04:47:22,817 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2026-09-10 04:47:22,817 INFO o.a.j.t.JMeterThread: Thread started: TCC orders 1-50
+2026-09-10 04:47:22,822 INFO o.a.j.p.h.s.HTTPHC4Impl: HTTP request retry count = 0
+2026-09-10 04:47:22,824 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2026-09-10 04:47:22,824 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to UTF-8
+2026-09-10 04:47:22,824 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2026-09-10 04:47:22,824 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2026-09-10 04:47:30,003 INFO o.a.j.r.Summariser: summary +    718 in 00:00:07 =   99.1/s Avg:   432 Min:    40 Max:   743 Err:     0 (0.00%) Active: 50 Started: 50 Finished: 0
+2026-09-10 04:48:00,006 INFO o.a.j.r.Summariser: summary +   3478 in 00:00:30 =  115.9/s Avg:   430 Min:   411 Max:   471 Err:     0 (0.00%) Active: 50 Started: 50 Finished: 0
+2026-09-10 04:48:00,006 INFO o.a.j.r.Summariser: summary =   4196 in 00:00:37 =  112.7/s Avg:   430 Min:    40 Max:   743 Err:     0 (0.00%)
+2026-09-10 04:48:30,002 INFO o.a.j.r.Summariser: summary +   3474 in 00:00:30 =  115.8/s Avg:   431 Min:   416 Max:   477 Err:     0 (0.00%) Active: 50 Started: 50 Finished: 0
+2026-09-10 04:48:30,002 INFO o.a.j.r.Summariser: summary =   7670 in 00:01:07 =  114.1/s Avg:   431 Min:    40 Max:   743 Err:     0 (0.00%)
+2026-09-10 04:49:00,003 INFO o.a.j.r.Summariser: summary +   3471 in 00:00:30 =  115.7/s Avg:   431 Min:   414 Max:   495 Err:     0 (0.00%) Active: 50 Started: 50 Finished: 0
+2026-09-10 04:49:00,004 INFO o.a.j.r.Summariser: summary =  11141 in 00:01:37 =  114.6/s Avg:   431 Min:    40 Max:   743 Err:     0 (0.00%)
+2026-09-10 04:49:22,806 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-6
+2026-09-10 04:49:22,806 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-6
+2026-09-10 04:49:22,823 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-14
+2026-09-10 04:49:22,823 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-14
+2026-09-10 04:49:22,832 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-32
+2026-09-10 04:49:22,832 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-32
+2026-09-10 04:49:22,839 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-8
+2026-09-10 04:49:22,840 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-8
+2026-09-10 04:49:22,848 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-36
+2026-09-10 04:49:22,848 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-36
+2026-09-10 04:49:22,857 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-10
+2026-09-10 04:49:22,857 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-10
+2026-09-10 04:49:22,865 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-23
+2026-09-10 04:49:22,866 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-23
+2026-09-10 04:49:22,874 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-1
+2026-09-10 04:49:22,874 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-1
+2026-09-10 04:49:22,883 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-33
+2026-09-10 04:49:22,883 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-33
+2026-09-10 04:49:22,891 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-3
+2026-09-10 04:49:22,891 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-3
+2026-09-10 04:49:22,900 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-7
+2026-09-10 04:49:22,900 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-7
+2026-09-10 04:49:22,909 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-26
+2026-09-10 04:49:22,909 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-26
+2026-09-10 04:49:22,917 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-45
+2026-09-10 04:49:22,917 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-45
+2026-09-10 04:49:22,926 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-39
+2026-09-10 04:49:22,926 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-39
+2026-09-10 04:49:22,934 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-43
+2026-09-10 04:49:22,934 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-43
+2026-09-10 04:49:22,943 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-34
+2026-09-10 04:49:22,943 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-34
+2026-09-10 04:49:22,951 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-22
+2026-09-10 04:49:22,951 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-22
+2026-09-10 04:49:22,959 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-20
+2026-09-10 04:49:22,959 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-20
+2026-09-10 04:49:22,968 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-5
+2026-09-10 04:49:22,968 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-5
+2026-09-10 04:49:22,976 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-30
+2026-09-10 04:49:22,976 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-30
+2026-09-10 04:49:22,985 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-9
+2026-09-10 04:49:22,985 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-9
+2026-09-10 04:49:22,993 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-19
+2026-09-10 04:49:22,993 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-19
+2026-09-10 04:49:23,002 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-37
+2026-09-10 04:49:23,002 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-37
+2026-09-10 04:49:23,010 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-40
+2026-09-10 04:49:23,010 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-40
+2026-09-10 04:49:23,019 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-46
+2026-09-10 04:49:23,019 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-46
+2026-09-10 04:49:23,027 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-27
+2026-09-10 04:49:23,027 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-27
+2026-09-10 04:49:23,035 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-48
+2026-09-10 04:49:23,035 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-48
+2026-09-10 04:49:23,044 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-44
+2026-09-10 04:49:23,045 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-44
+2026-09-10 04:49:23,056 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-25
+2026-09-10 04:49:23,056 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-25
+2026-09-10 04:49:23,064 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-49
+2026-09-10 04:49:23,064 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-49
+2026-09-10 04:49:23,072 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-31
+2026-09-10 04:49:23,073 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-31
+2026-09-10 04:49:23,081 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-4
+2026-09-10 04:49:23,081 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-4
+2026-09-10 04:49:23,090 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-24
+2026-09-10 04:49:23,090 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-24
+2026-09-10 04:49:23,098 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-29
+2026-09-10 04:49:23,098 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-29
+2026-09-10 04:49:23,107 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-41
+2026-09-10 04:49:23,107 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-41
+2026-09-10 04:49:23,115 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-18
+2026-09-10 04:49:23,115 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-18
+2026-09-10 04:49:23,123 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-28
+2026-09-10 04:49:23,123 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-28
+2026-09-10 04:49:23,132 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-2
+2026-09-10 04:49:23,132 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-2
+2026-09-10 04:49:23,140 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-16
+2026-09-10 04:49:23,140 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-16
+2026-09-10 04:49:23,148 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-35
+2026-09-10 04:49:23,149 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-35
+2026-09-10 04:49:23,157 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-47
+2026-09-10 04:49:23,157 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-47
+2026-09-10 04:49:23,165 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-17
+2026-09-10 04:49:23,165 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-17
+2026-09-10 04:49:23,173 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-15
+2026-09-10 04:49:23,173 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-15
+2026-09-10 04:49:23,182 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-21
+2026-09-10 04:49:23,182 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-21
+2026-09-10 04:49:23,191 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-12
+2026-09-10 04:49:23,191 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-12
+2026-09-10 04:49:23,199 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-11
+2026-09-10 04:49:23,199 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-11
+2026-09-10 04:49:23,208 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-38
+2026-09-10 04:49:23,208 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-38
+2026-09-10 04:49:23,216 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-13
+2026-09-10 04:49:23,217 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-13
+2026-09-10 04:49:23,225 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-42
+2026-09-10 04:49:23,225 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-42
+2026-09-10 04:49:23,234 INFO o.a.j.t.JMeterThread: Stopping because end time detected by thread: TCC orders 1-50
+2026-09-10 04:49:23,234 INFO o.a.j.t.JMeterThread: Thread finished: TCC orders 1-50
+2026-09-10 04:49:23,234 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2026-09-10 04:49:23,237 INFO o.a.j.r.Summariser: summary +   2703 in 00:00:23 =  116.3/s Avg:   429 Min:   414 Max:   468 Err:     0 (0.00%) Active: 0 Started: 50 Finished: 50
+2026-09-10 04:49:23,237 INFO o.a.j.r.Summariser: summary =  13844 in 00:02:00 =  114.9/s Avg:   430 Min:    40 Max:   743 Err:     0 (0.00%)

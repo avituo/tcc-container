@@ -1,0 +1,64 @@
+ Network tcc-microservices-experiment_experiment Creating 
+ Network tcc-microservices-experiment_experiment Creating 
+ Network tcc-microservices-experiment_experiment Created 
+ Network tcc-microservices-experiment_experiment Created 
+ Container tcc-microservices-experiment-mysql-1 Creating 
+ Container tcc-microservices-experiment-mysql-1 Created 
+ Container tcc-microservices-experiment-auth-1 Creating 
+ Container tcc-microservices-experiment-product-1 Creating 
+ Container tcc-microservices-experiment-auth-1 Created 
+ Container tcc-microservices-experiment-product-1 Created 
+ Container tcc-microservices-experiment-order-1 Creating 
+ Container tcc-microservices-experiment-order-1 Created 
+ Container tcc-microservices-experiment-gateway-1 Creating 
+ Container tcc-microservices-experiment-gateway-1 Created 
+ Container tcc-microservices-experiment-mysql-1 Starting 
+ Container tcc-microservices-experiment-mysql-1 Started 
+ Container tcc-microservices-experiment-mysql-1 Waiting 
+ Container tcc-microservices-experiment-mysql-1 Waiting 
+ Container tcc-microservices-experiment-mysql-1 Healthy 
+ Container tcc-microservices-experiment-auth-1 Starting 
+ Container tcc-microservices-experiment-mysql-1 Healthy 
+ Container tcc-microservices-experiment-product-1 Starting 
+ Container tcc-microservices-experiment-auth-1 Started 
+ Container tcc-microservices-experiment-product-1 Started 
+ Container tcc-microservices-experiment-mysql-1 Waiting 
+ Container tcc-microservices-experiment-mysql-1 Healthy 
+ Container tcc-microservices-experiment-order-1 Starting 
+ Container tcc-microservices-experiment-order-1 Started 
+ Container tcc-microservices-experiment-gateway-1 Starting 
+ Container tcc-microservices-experiment-gateway-1 Started 
+Laravel runtime verified in auth: 13.20.0
+composer.lock verified in auth: bda2578ab881ca3bf71e3def5cca6342fa59ee66b2b8581c5355f0dcbfe55557
+Laravel runtime verified in product: 13.20.0
+composer.lock verified in product: 515281617fcad3d344949d914fe11ed793ff6fedf87fec88c2090aba2d895df2
+Laravel runtime verified in order: 13.20.0
+composer.lock verified in order: 515281617fcad3d344949d914fe11ed793ff6fedf87fec88c2090aba2d895df2
+NAME                                     IMAGE                                                                                 COMMAND                  SERVICE   CREATED          STATUS                    PORTS
+tcc-microservices-experiment-auth-1      tcc-auth-experiment:php8.4.19                                                         "docker-php-entrypoi…"   auth      12 seconds ago   Up 9 seconds              8003/tcp
+tcc-microservices-experiment-gateway-1   tcc-gateway-experiment:java21                                                         "java -jar app.jar"      gateway   12 seconds ago   Up 7 seconds              0.0.0.0:18080->8080/tcp, [::]:18080->8080/tcp
+tcc-microservices-experiment-mysql-1     mysql:8.4.8@sha256:2952e3be7807f06fc18de50b3ea1a632d5c70d63482ff7d7376fe3aa8999babf   "docker-entrypoint.s…"   mysql     12 seconds ago   Up 11 seconds (healthy)   3306/tcp, 33060/tcp
+tcc-microservices-experiment-order-1     tcc-order-experiment:php8.4.19                                                        "docker-php-entrypoi…"   order     12 seconds ago   Up 8 seconds              8002/tcp
+tcc-microservices-experiment-product-1   tcc-product-experiment:php8.4.19                                                      "docker-php-entrypoi…"   product   12 seconds ago   Up 8 seconds              8001/tcp
+ Container tcc-microservices-experiment-gateway-1 Stopping 
+ Container tcc-microservices-experiment-gateway-1 Stopped 
+ Container tcc-microservices-experiment-gateway-1 Removing 
+ Container tcc-microservices-experiment-gateway-1 Removed 
+ Container tcc-microservices-experiment-order-1 Stopping 
+ Container tcc-microservices-experiment-auth-1 Stopping 
+ Container tcc-microservices-experiment-order-1 Stopped 
+ Container tcc-microservices-experiment-order-1 Removing 
+ Container tcc-microservices-experiment-auth-1 Stopped 
+ Container tcc-microservices-experiment-auth-1 Removing 
+ Container tcc-microservices-experiment-order-1 Removed 
+ Container tcc-microservices-experiment-product-1 Stopping 
+ Container tcc-microservices-experiment-auth-1 Removed 
+ Container tcc-microservices-experiment-product-1 Stopped 
+ Container tcc-microservices-experiment-product-1 Removing 
+ Container tcc-microservices-experiment-product-1 Removed 
+ Container tcc-microservices-experiment-mysql-1 Stopping 
+ Container tcc-microservices-experiment-mysql-1 Stopped 
+ Container tcc-microservices-experiment-mysql-1 Removing 
+ Container tcc-microservices-experiment-mysql-1 Removed 
+ Network tcc-microservices-experiment_experiment Removing 
+ Network tcc-microservices-experiment_experiment Removed 

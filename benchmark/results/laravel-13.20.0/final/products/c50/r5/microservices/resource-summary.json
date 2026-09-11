@@ -1,0 +1,53 @@
+{
+  "architecture_total": {
+    "average_cpu_percent": 143.19375,
+    "average_memory_bytes": 1264592268.55,
+    "maximum_cpu_percent": 204.11,
+    "maximum_memory_bytes": 1273002722.0,
+    "sample_count": 120
+  },
+  "cpu_total_method": "sum of Docker container CPU percentages per one-second sample",
+  "individual_containers": {
+    "auth": {
+      "average_cpu_percent": 0.020166666666666666,
+      "average_memory_bytes": 79261860.0,
+      "maximum_cpu_percent": 0.03,
+      "maximum_memory_bytes": 79261860.0,
+      "sample_count": 120
+    },
+    "gateway": {
+      "average_cpu_percent": 36.909,
+      "average_memory_bytes": 493550742.18333334,
+      "maximum_cpu_percent": 93.59,
+      "maximum_memory_bytes": 495452160.0,
+      "sample_count": 120
+    },
+    "mysql": {
+      "average_cpu_percent": 26.118666666666666,
+      "average_memory_bytes": 534886481.89166665,
+      "maximum_cpu_percent": 30.89,
+      "maximum_memory_bytes": 542008934.0,
+      "sample_count": 120
+    },
+    "order": {
+      "average_cpu_percent": 0.018500000000000003,
+      "average_memory_bytes": 74249667.0,
+      "maximum_cpu_percent": 0.03,
+      "maximum_memory_bytes": 74249667.0,
+      "sample_count": 120
+    },
+    "product": {
+      "average_cpu_percent": 80.12741666666668,
+      "average_memory_bytes": 82643517.475,
+      "maximum_cpu_percent": 84.5,
+      "maximum_memory_bytes": 84882227.0,
+      "sample_count": 120
+    }
+  },
+  "memory_total_method": "sum of Docker container memory-used bytes per one-second sample",
+  "sampling_quality": {
+    "distinct_docker_refresh_count": 120,
+    "reused_docker_refresh_count": 0,
+    "scheduled_interval_seconds": 1
+  }
+}

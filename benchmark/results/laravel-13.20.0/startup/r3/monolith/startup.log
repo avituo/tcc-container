@@ -1,0 +1,29 @@
+ Network tcc-monolith-experiment_experiment Creating 
+ Network tcc-monolith-experiment_experiment Creating 
+ Network tcc-monolith-experiment_experiment Created 
+ Network tcc-monolith-experiment_experiment Created 
+ Container tcc-monolith-experiment-mysql-1 Creating 
+ Container tcc-monolith-experiment-mysql-1 Created 
+ Container tcc-monolith-experiment-monolith-1 Creating 
+ Container tcc-monolith-experiment-monolith-1 Created 
+ Container tcc-monolith-experiment-mysql-1 Starting 
+ Container tcc-monolith-experiment-mysql-1 Started 
+ Container tcc-monolith-experiment-mysql-1 Waiting 
+ Container tcc-monolith-experiment-mysql-1 Healthy 
+ Container tcc-monolith-experiment-monolith-1 Starting 
+ Container tcc-monolith-experiment-monolith-1 Started 
+Laravel runtime verified in monolith: 13.20.0
+composer.lock verified in monolith: 02e8adb1631fb984b80d032770f3b27084c59a7011eb215a6deb0764136be50c
+NAME                                 IMAGE                                                                                 COMMAND                  SERVICE    CREATED         STATUS                   PORTS
+tcc-monolith-experiment-monolith-1   tcc-monolith-experiment:php8.4.19                                                     "docker-php-entrypoi…"   monolith   6 seconds ago   Up 3 seconds             0.0.0.0:18000->8000/tcp, [::]:18000->8000/tcp
+tcc-monolith-experiment-mysql-1      mysql:8.4.8@sha256:2952e3be7807f06fc18de50b3ea1a632d5c70d63482ff7d7376fe3aa8999babf   "docker-entrypoint.s…"   mysql      6 seconds ago   Up 5 seconds (healthy)   3306/tcp, 33060/tcp
+ Container tcc-monolith-experiment-monolith-1 Stopping 
+ Container tcc-monolith-experiment-monolith-1 Stopped 
+ Container tcc-monolith-experiment-monolith-1 Removing 
+ Container tcc-monolith-experiment-monolith-1 Removed 
+ Container tcc-monolith-experiment-mysql-1 Stopping 
+ Container tcc-monolith-experiment-mysql-1 Stopped 
+ Container tcc-monolith-experiment-mysql-1 Removing 
+ Container tcc-monolith-experiment-mysql-1 Removed 
+ Network tcc-monolith-experiment_experiment Removing 
+ Network tcc-monolith-experiment_experiment Removed 

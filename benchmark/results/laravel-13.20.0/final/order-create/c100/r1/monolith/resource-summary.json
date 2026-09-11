@@ -1,0 +1,32 @@
+{
+  "architecture_total": {
+    "average_cpu_percent": 82.21158333333332,
+    "average_memory_bytes": 624560177.1916667,
+    "maximum_cpu_percent": 90.7,
+    "maximum_memory_bytes": 629135115.0,
+    "sample_count": 120
+  },
+  "cpu_total_method": "sum of Docker container CPU percentages per one-second sample",
+  "individual_containers": {
+    "monolith": {
+      "average_cpu_percent": 50.41975,
+      "average_memory_bytes": 90062542.19166666,
+      "maximum_cpu_percent": 54.61,
+      "maximum_memory_bytes": 91624571.0,
+      "sample_count": 120
+    },
+    "mysql": {
+      "average_cpu_percent": 31.791833333333333,
+      "average_memory_bytes": 534497635.0,
+      "maximum_cpu_percent": 37.32,
+      "maximum_memory_bytes": 539597210.0,
+      "sample_count": 120
+    }
+  },
+  "memory_total_method": "sum of Docker container memory-used bytes per one-second sample",
+  "sampling_quality": {
+    "distinct_docker_refresh_count": 120,
+    "reused_docker_refresh_count": 0,
+    "scheduled_interval_seconds": 1
+  }
+}
